@@ -7,9 +7,22 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\TokenController;
 
 
 Route::get('/', function () {
+    if (auth()->check()) {
+        // Redirect based on user role
+        if (auth()->user()->role == 'admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif (auth()->user()->role == 'agent') {
+            return redirect()->route('agent.dashboard');
+        } elseif (auth()->user()->role == 'user') {
+            return redirect()->route('user.dashboard');
+        }
+    }
+
+    // If the user is not authenticated, redirect to login
     return redirect()->route('login');
 });
 
@@ -41,17 +54,29 @@ Route::get('/register/step3', [AuthController::class, 'showStep3'])->name('regis
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::post('/admin/activate/{user}', [AdminController::class, 'activateUser'])->name('admin.activateUser');
+    Route::get('/view-tokens/{userId}', [TokenController::class, 'viewTokens'])->name('view.tokens');
+    Route::post('/generate-tokens/{userId}', [TokenController::class, 'generateTokens'])->name('generate.tokens');
+
+    
 });
 
 Route::middleware(['auth', 'role:agent'])->group(function () {
     Route::get('/agent/dashboard', [AgentController::class, 'index'])->name('agent.dashboard');
     Route::post('/admin/activate/{user}', [AdminController::class, 'activateUser'])->name('admin.activateUser');
+
+    
 });
 
 
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user/dashboard', [UserController::class, 'index'])->name('user.dashboard');
     Route::post('/admin/activate/{user}', [AdminController::class, 'activateUser'])->name('admin.activateUser');
+
+
+    
 });
 
+Route::post('/active-package', [TokenController::class, 'activePackage'])->name('active.package');
+Route::get('/token-shares', [TokenController::class, 'shareToken'])->name('token.share');
+Route::post('/token/share', [TokenController::class, 'shareTokens'])->name('token.shares');
 

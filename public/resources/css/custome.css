@@ -1,0 +1,18 @@
+.container {
+    padding: 20px;
+    text-align: center;
+}
+.ref input {
+    margin: 10px;
+    padding: 8px;
+    text-align: center;
+}
+.ref button {
+    padding: 8px 16px;
+    cursor: pointer;
+}
+.ref .url-display {
+    margin-top: 10px;
+    font-size: 18px;
+    word-wrap: break-word;
+}

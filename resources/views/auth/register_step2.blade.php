@@ -13,7 +13,7 @@
         <div class="col-12 d-flex align-items-center justify-content-center">
             <div class="bg-white shadow border-0 rounded p-4 p-lg-5 w-100 fmxw-500">
                 <h1 class="h3 mb-4">Step 2: Select a Package</h1>
-
+                  
 
     <form action="{{ route('register.processStep2') }}" method="POST">
         @csrf
@@ -34,9 +34,23 @@
                 <option value="5000" {{ old('package') == 5000 ? 'selected' : '' }}>5000 USD</option>
             </select>
         </div>
-
+        <div class="mt-4">
+            <h3>Upliner Activation</h3>
+            
+                <i class="fab fa-whatsapp"></i> WhatsApp no: {{ $parentData->whatsapp_number }}
+         
+            <br>
+            
+            <!-- Call Now button with link -->
+            <a href="tel:{{ $parentData->whatsapp_number }}" class="btn btn-success mt-2">
+                <i class="fas fa-phone-alt"></i> Call Now
+            </a>
+        </div>
         <button type="submit" class="btn btn-primary mt-4">Next</button>
     </form>
+    <div class="form-group">
+       
+    </div> 
             </div>
         </div>
     </div>

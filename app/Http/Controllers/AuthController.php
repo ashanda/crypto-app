@@ -8,6 +8,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\ReferralCode;
 use App\Models\User;
 use App\Models\UserPackage;
+use App\Models\UserParent;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
@@ -28,6 +29,7 @@ class AuthController extends Controller
             $checkUser = User::where('email', $request->email)->first();
             $checkPackage = UserPackage::where('user_id', $checkUser->id)->count();
             if($checkPackage > 1) {
+    
                 return redirect()->route(Auth::user()->role . '.dashboard'); // Redirect based on role
             }elseif($checkPackage == 1){
                 $checkPackage = UserPackage::where('user_id', $checkUser->id)->where('status', 'pending')->first();
@@ -141,8 +143,17 @@ class AuthController extends Controller
 
     public function showStep2(Request $request, $id)
     {
+        $userData = User::where('id',$id)->first();
         
-        return view('auth.register_step2', compact('id'));
+        $parent_id = ParentFind($userData->referred_by);
+        $userParent = UserParent::create([
+            'user_id' => $id,
+            'virtual_id' => $userData->referred_by,
+            'parent_id' => $parent_id,
+        ]);
+        $parentData = User::where('id',$parent_id)->first();
+      
+        return view('auth.register_step2', compact('id','parentData'));
     }
 
     public function processStep2(Request $request)
@@ -153,6 +164,7 @@ class AuthController extends Controller
         ]);
         
         $user = $request->newUserID;
+        $parentData = User::where('id',$user)->first();
     
         // Check if the user already has an active package
         $existingPackage = UserPackage::where('user_id', $user)
@@ -170,6 +182,8 @@ class AuthController extends Controller
         $userPackage = UserPackage::firstOrNew(['user_id' => $user]);
         $userPackage->package = $request->package;
         $userPackage->status = 'pending';  // Mark the new package as active
+        $userPackage->ref_id = $parentData->referred_by;
+        $userPackage->sale = 'first';
         $userPackage->save();
     
         return redirect()->route('register.step3', ['id' => $user]);

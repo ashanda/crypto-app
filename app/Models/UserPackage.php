@@ -8,7 +8,7 @@ class UserPackage extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'package', 'status'];
+    protected $fillable = ['user_id', 'package', 'status', 'ref_id', 'sale'];
 
     protected $casts = [
         'status' => 'string',  // Ensure that status is always a string

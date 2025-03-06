@@ -20,7 +20,8 @@
     <link type="text/css" href="{{ asset('resources/vendor/notyf/notyf.min.css') }}" rel="stylesheet">
     <!-- CSS -->
     <link type="text/css" href="{{ asset('resources/css/volt.css') }}" rel="stylesheet">
-    
+    <link type="text/css" href="{{ asset('resources/css/custome.css') }}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -30,12 +31,15 @@
     @yield('footer')
 
     <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script src="{{ asset('resources/vendor/@popperjs/core/dist/umd/popper.min.js') }}"></script>
     <script src="{{ asset('resources/vendor/bootstrap/dist/js/bootstrap.min.js') }}"></script>
 
     <!-- Additional JS libraries -->
     <script src="{{ asset('resources/vendor/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
     <script src="{{ asset('resources/assets/js/volt.js') }}"></script>
-
+    <script src="{{ asset('resources/assets/js/custome.js') }}"></script>
+    @yield('scripts')
 </body>
 </html>
