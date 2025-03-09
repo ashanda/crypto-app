@@ -19,31 +19,18 @@ class AgentController extends Controller
         $myTokens = Token::where('user_id', auth()->user()->id)->where('status','active')->count();
         $myWallet = Wallet::where('user_id', auth()->user()->id)->first();
 
-        $packageFees = [
-            10 => 20,
-            100 => 40,
-            1000 => 60,
-            5000 => 70,
-            10000 => 80,
-            100000 => 90,
-            1000000 => 90,
-            5000000 => 90,
-            10000000=>90
-        ];
-        
-        $myPackage = UserPackage::where('user_id', auth()->user()->id)->where('status','active')->first();
-        
+        $myPackage = UserPackage::where('user_id', auth()->user()->id)->where('status','active')->with('userpackage')->first();
+    
         if ($myPackage) {
             $packageValue = $myPackage->package;
             
             // Get the corresponding fee percentage, default to 0 if not found
-            $feePercentage = $packageFees[$packageValue] ?? 0;
+            $feePercentage = $myPackage->userpackage->commission ?? 0;
             
         }
         
-        $myPackage = UserPackage::where('user_id',auth()->user()->id)->first();
-
-        $activations = UserPackage::where('ref_id',auth()->user()->id)->with('user')->where('status','pending')->paginate(10);
+        
+        $activations = UserPackage::where('ref_id',auth()->user()->id)->with(['user','userpackage'])->where('status','pending')->paginate(10);
         return view('agent.dashboard',compact('refLink','myTokens','myWallet','activations','feePercentage'));
 
         

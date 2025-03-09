@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\UserPackage;
-use Illuminate\Http\Request;
 use App\Models\ReferralCode;
 use App\Models\Token;
+use App\Models\User;
+use App\Models\UserPackage;
 use App\Models\Wallet;
+use Illuminate\Http\Request;
 
-class AdminController extends Controller
+class CompanyController extends Controller
 {
     public function index()
     {
@@ -27,8 +27,7 @@ class AdminController extends Controller
             ->paginate(10); // Paginate with 10 records per page
         $myTokens = Token::where('user_id', auth()->user()->id)->where('status','active')->count();
         $myWallet = Wallet::where('user_id', auth()->user()->id)->first();
-        $activations = UserPackage::where('ref_id',auth()->user()->id)->with('user')->where('status','pending')->paginate(10);
-        return view('admin.dashboard',compact('refLink', 'tokenCounts','myTokens','myWallet','activations'));
+        return view('company.dashboard',compact('refLink', 'tokenCounts','myTokens','myWallet'));
         //return response()->json(['message' => 'Welcome to Admin Dashboard']);
     }
 
@@ -37,24 +36,34 @@ class AdminController extends Controller
         $user->status = 'active';
         $user->save();
         // Send an email or notification if needed
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('company.dashboard');
     }
 
-   public function pendingActivation(){
-    
-    
-    $myPackage = UserPackage::where('user_id', auth()->user()->id)->where('status','active')->with('userpackage')->first();
-    
-    if ($myPackage) {
-        $packageValue = $myPackage->package;
+    public function pendingActivation(){
+        $packageFees = [
+            10 => 20,
+            100 => 40,
+            1000 => 60,
+            5000 => 70,
+            10000 => 80,
+            100000 => 90,
+            1000000 => 90,
+            5000000 => 90,
+            10000000=>90
+        ];
         
-        // Get the corresponding fee percentage, default to 0 if not found
-        $feePercentage = $myPackage->userpackage->commission ?? 0;
+        $myPackage = UserPackage::where('user_id', auth()->user()->id)->where('status','active')->first();
         
-    }
-    
-    
-    $activations = UserPackage::where('ref_id',auth()->user()->id)->with(['user','userpackage'])->where('status','pending')->paginate(10);
-    return view('admin.pending-activation',compact('activations','feePercentage'));
-   }
+        if ($myPackage) {
+            $packageValue = $myPackage->package;
+            
+            // Get the corresponding fee percentage, default to 0 if not found
+            $feePercentage = $packageFees[$packageValue] ?? 0;
+            
+        }
+        
+        $myPackage = UserPackage::where('user_id',auth()->user()->id)->first();
+        $activations = UserPackage::where('status','pending')->paginate(10);
+        return view('company.pending-activation',compact('activations','feePercentage'));
+       }
 }

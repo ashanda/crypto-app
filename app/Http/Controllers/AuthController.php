@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Package;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -151,16 +152,17 @@ class AuthController extends Controller
             'virtual_id' => $userData->referred_by,
             'parent_id' => $parent_id,
         ]);
+        $package = Package::get();
         $parentData = User::where('id',$parent_id)->first();
       
-        return view('auth.register_step2', compact('id','parentData'));
+        return view('auth.register_step2', compact('id','parentData','package'));
     }
 
     public function processStep2(Request $request)
     {
         // Validate the package selection
         $request->validate([
-            'package' => 'required|in:10,20,50,100,500,1000,2500,5000', // Validate package selection
+            'package' => 'required|in:10,100,1000,5000,10000,100000,1000000,10000000', // Validate package selection
         ]);
         
         $user = $request->newUserID;
@@ -176,11 +178,12 @@ class AuthController extends Controller
             Alert::error('Error', 'You already have an active package');
             return redirect()->route('login');
         }
-    
+        
+        $UserBuyPackage = Package::where('price',$request->package)->first();
         // Ensure the user can only have one package at a time
         // Create or update the user's package
         $userPackage = UserPackage::firstOrNew(['user_id' => $user]);
-        $userPackage->package = $request->package;
+        $userPackage->package = $UserBuyPackage->id;
         $userPackage->status = 'pending';  // Mark the new package as active
         $userPackage->ref_id = $parentData->referred_by;
         $userPackage->sale = 'first';

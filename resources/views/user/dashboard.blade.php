@@ -210,6 +210,10 @@ Download
                         icon: 'success',
                         title: 'Success!',
                         text: 'Package updated successfully!'
+                    }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload(); // Reload the page after clicking OK
+                        }
                     });
                     // Optionally, refresh the table or make other UI updates
                 },

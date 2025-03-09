@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');  // Foreign key referencing users table
             $table->string('package');  // The selected package
             $table->enum('status', ['pending', 'active', 'deactivate'])->default('pending');  // Package status
+            $table->string('earn')->default(0);  // Earnings from the package
             $table->timestamps();  // To store creation and update time
         });
     }

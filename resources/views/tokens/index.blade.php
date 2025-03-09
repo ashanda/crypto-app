@@ -14,13 +14,19 @@
     @if (session('error'))
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
+    <div class="d-flex justify-content-between w-100 flex-wrap">
+        <div class="mb-3 mb-lg-0 col-6">
+            <form action="{{ route('generate.tokens', $user->id) }}" method="POST" class="mb-3">
+                @csrf
+                <label for="token_count" class="form-label">Enter Number of Tokens:</label>
+                <input type="number" name="token_count" id="token_count" class="form-control mb-2" min="1" max="500" required>
+                <label for="token_count" class="form-label">Enter Google Auth Code:</label>
+                <input type="number" name="google_auth_code" class="form-control mb-2" min="1"  required >
+                <button type="submit" class="btn btn-primary">Generate Tokens</button>
+            </form>
+        </div>
+    </div>
 
-    <form action="{{ route('generate.tokens', $user->id) }}" method="POST" class="mb-3">
-        @csrf
-        <label for="token_count" class="form-label">Enter Number of Tokens:</label>
-        <input type="number" name="token_count" id="token_count" class="form-control mb-2" min="1" max="500" required>
-        <button type="submit" class="btn btn-primary">Generate Tokens</button>
-    </form>
 
     <table class="table">
         <thead>

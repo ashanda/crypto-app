@@ -1,21 +1,23 @@
 @extends('layouts.app')
+@section('sidebar')
+ @include('layouts.sidebar')
+@endsection
 
 @section('content')
+ @include('layouts.topbar')
+
+
 <main>
     <section class="vh-lg-100 mt-5 mt-lg-0 bg-soft d-flex align-items-center">
 <div class="container">
     <div class="row justify-content-center form-bg-image">
-        <p class="text-center"><a href="./sign-in.html" class="d-flex align-items-center justify-content-center">
-            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
-            Back to log in
-            </a>
-        </p>
+        
         <div class="col-12 d-flex align-items-center justify-content-center">
             <div class="bg-white shadow border-0 rounded p-4 p-lg-5 w-100 fmxw-500">
-                <h1 class="h3 mb-4">Step 2: Select a Package</h1>
+                
                   
 
-    <form action="{{ route('register.processStep2') }}" method="POST">
+    <form action="{{ route('buy.packages') }}" method="POST">
         @csrf
 
         <div class="form-group">
@@ -27,16 +29,16 @@
                 @foreach ($package as $pack) 
                     <option value="{{ $pack->price }}" {{ old('package') == $pack->price ? 'selected' : '' }}>{{ $pack->name }} USD</option>
                 @endforeach
-                
             </select>
         </div>
         <div class="mt-4">
             <h3>Upliner Activation</h3>
             
-                <i class="fab fa-whatsapp"></i> WhatsApp no: {{ $parentData->whatsapp_number }}
+                 Binance ID: {{ $parentData->user->binance_pay_id }}
          
             <br>
-            
+            <i class="fab fa-whatsapp mt-2"></i> WhatsApp no: {{ $parentData->user->whatsapp_number }}
+            <br>
             <!-- Call Now button with link -->
             <a href="tel:{{ $parentData->whatsapp_number }}" class="btn btn-success mt-2">
                 <i class="fas fa-phone-alt"></i> Call Now

@@ -14,13 +14,13 @@ class UserSeeder extends Seeder
     {
         // Create Admin User
         $admin = User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
+            'name' => 'Company Head',
+            'email' => 'company@example.com',
             'password' => Hash::make('password'),
             'whatsapp_number' => '1234567890',
             'binance_pay_id' => 'binance_id_123',
             'status' => 'active',
-            'role' => 'admin',
+            'role' => 'company',
             'referred_by' => null, // No referral code
         ]);
 
@@ -31,43 +31,7 @@ class UserSeeder extends Seeder
             'code' => $adminReferralCode,
         ]);
 
-        // Create Agent User
-        $agent = User::create([
-            'name' => 'Agent User',
-            'email' => 'agent@example.com',
-            'password' => Hash::make('password'),
-            'whatsapp_number' => '1234567891',
-            'binance_pay_id' => 'binance_id_124',
-            'status' => 'active',
-            'role' => 'agent',
-            'referred_by' => $adminReferralCode, // Referred by Admin
-        ]);
-
-        // Generate referral code for Agent
-        $agentReferralCode = strtoupper(Str::random(6));
-        ReferralCode::create([
-            'user_id' => $agent->id,
-            'code' => $agentReferralCode,
-        ]);
-
-        // Create Regular User
-        $user = User::create([
-            'name' => 'Regular User',
-            'email' => 'user@example.com',
-            'password' => Hash::make('password'),
-            'whatsapp_number' => '1234567892',
-            'binance_pay_id' => 'binance_id_125',
-            'status' => 'active',
-            'role' => 'user',
-            'referred_by' => $agentReferralCode, // Referred by Agent
-        ]);
-
-        // Generate referral code for Regular User
-        $userReferralCode = strtoupper(Str::random(6));
-        ReferralCode::create([
-            'user_id' => $user->id,
-            'code' => $userReferralCode,
-        ]);
+       
     }
 }
 
